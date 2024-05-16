@@ -1,104 +1,106 @@
-# VLSI-LAB-EXP-5
-# SIMULATION AND IMPLEMENTATION OF FINITE STATE MACHINE
+EXP-5
 
-# AIM:
+date:
 
-      To simulate and synthesis finite state machine using vivado.
+                  SIMULATION AND IMPLEMENTATION OF FINITE STATE MACHINE
+                                                        
+AIM: To simulate and synthesis finite state machine using vivado2023.3.
 
-# APPARATUS REQUIRED:
+APPARATUS REQUIRED:
+vivado 2023.3
+ 
+PROCEDURE: 
 
-  vivado 2023.2.
-  
-# PROCEDURE: 
+STEP:1 Launch the Vivado 2023.2 software.
 
-STEP:1 Start the vivado software, Select and Name the New project.
+STEP:2 Click on “create project ” from the starting page of vivado.
 
-STEP:2 Select the device family, device, package and speed.
+STEP:3 Choose the design entry method:RTL(verilog/VHDL).
 
-STEP:3 Select new source in the New Project and select Verilog Module as the Source type.
+STEP:4 Crete design source and give name to it and click finish.
 
-STEP:4 Type the File Name and module name and Click Next and then finish button. Type the code and save it.
+STEP:5 Write the verilog code and check the syntax.
 
-STEP:5 Select the run simulation and then run Behavioral Simulation in the Source Window and click the check syntax.
+STEP:6 Click “run simulation” in the navigator window and click “Run behavioral simulation”.
 
-STEP:6 Click the simulation to simulate the program and give the inputs and verify the outputs as per the truth table.
+STEP:7 Verify the output in the simulation window.
 
-STEP:7 compare the output with truth table.
+Logic Diagram 2 bit Multiplier
 
-# Logic Diagram :
+
+
+Logic Diagram :
 
 ![image](https://github.com/navaneethans/VLSI-LAB-EXP-5/assets/6987778/34ec5d63-2b3b-4511-81ef-99f4572d5869)
 
 
-# VERILOG CODE:
-
-module fsm(clk, rst, x, z);
-
-input clk, rst, x;
-
-output z;
-
-reg [2:1] present_state, NEXT_STATE;
-
-parameter S0=2'b00, S1=2'b01, S2=2'b10, S3=2'b11;
-
-always@(x,present_state)
-
-case(present_state)
-
-S0: if(x)
-
-NEXT_STATE=S1;
-
-else
-
-NEXT_STATE=S0;
-
-S1: if(x)
-
-NEXT_STATE=S1;
-
-else
-
-NEXT_STATE=S2;
-
-S2: if(x)
-
-NEXT_STATE=S3;
-
-else
-
-NEXT_STATE=S0;
-
-S3: if(x)
-
-NEXT_STATE=S1;
-
-else
-
-NEXT_STATE=S2;
-
+VERILOG CODE:
+```
+module Sequence_Detector_Moore(clock,reset,sequence_in,detector_out);
+input clock, reset, sequence_in; 
+output reg detector_out; 
+parameter  S0=2'b00,S1=2'b01,S2=2'b10,S3=2'b11;
+reg [1:0] current_state, next_state; 
+// sequential memory of the Moore FSM
+always @(posedge clock, posedge reset)
+begin
+ if(reset==1) 
+ current_state <= S0;
+ else
+ current_state <= next_state; 
+end 
+// to determine next state 
+always @(current_state,sequence_in)
+begin
+ case(current_state) 
+ 	S0:begin
+		if(sequence_in==1)
+   			next_state = S1;
+  		else
+   			next_state = S0;
+ 	   end
+ 	S1:begin
+if(sequence_in==0)
+   			next_state = S2;
+  		else
+   			next_state = S1;
+ 	   end
+S2:begin
+  	if(sequence_in==1)
+   		next_state = S3;
+ 	 else
+   		next_state = S0;
+    end 
+  S3:begin
+  	if(sequence_in==0)
+   		next_state = S0;
+  	else
+   		next_state = S1;
+     end
+	default:next_state = S0;
 endcase
-
-always@(negedge rst, posedge clk)
-
-if(rst)
-
-present_state<=S0;
-
-else
-
-present_state<=NEXT_STATE;
-
-assign z=(present_state==S3);
-
+end
+// to determine the output of the Moore FSM, output only depends on current state
+always @(current_state)
+begin 
+ case(current_state) 
+ 	S0:   detector_out = 0;
+ 	S1:   detector_out = 0;
+ 	S2:  detector_out = 0;
+ 	S3:  detector_out = 1;
+ 	default:  detector_out = 0;
+ endcase
+end 
 endmodule
+```
 
-# OUTPUT:
+OUTPUT:
+![image](https://github.com/kristipatishivani/VLSI-LAB-EXP-5/assets/161432255/96ab29d3-e2a6-41c0-8e29-914754af0f33)
 
-![322775579-64241411-73cd-4df9-ad41-b57f4a106097](https://github.com/mattikuravasowmya/VLSI-LAB-EXP-5/assets/161432676/9f890f81-fa52-4b3a-be2b-7ba0e633a3a7)
 
-# RESULT:
 
-Thus,the simulation and synthesis of finite state machine by using vivado has been successfully excecuted and verified.
+RESULT:
+Thus the simulate and synthesis finite state machine using vivado2023.3 is verified
+
+
 
